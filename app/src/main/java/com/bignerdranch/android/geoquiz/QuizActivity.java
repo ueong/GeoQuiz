@@ -8,12 +8,16 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class QuizActivity extends AppCompatActivity {
+import butterknife.Bind;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-    private Button mTrueButton;
-    private Button mFalseButton;
-    private Button mNextButton;
-    private TextView mQuestionTextView;
+
+public class QuizActivity extends AppCompatActivity {
+    @Bind(R.id.true_button) Button mTrueButton;
+    @Bind(R.id.false_button) Button mFalseButton;
+    @Bind(R.id.next_button) Button mNextButton;
+    @Bind(R.id.question_text_view) TextView mQuestionTextView;
 
     private Question[] mQuestionBank = new Question[] {
             new Question(R.string.question_oceans, true),
@@ -25,24 +29,29 @@ public class QuizActivity extends AppCompatActivity {
 
     private int mCurrentIndex = 0;
 
+    @OnClick(R.id.true_button)
+    void trueButtonClicked() {
+        Toast.makeText(QuizActivity.this, R.string.correct_toast, Toast.LENGTH_SHORT).show();
+    }
+
+    @OnClick(R.id.false_button)
+    void falseButtonClicked() {
+        Toast.makeText(QuizActivity.this, R.string.incorrect_toast, Toast.LENGTH_SHORT).show();
+    }
+
+    @OnClick(R.id.next_button)
+    void nextButtonClicked() {
+        mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
+        updateQuestion();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz);
 
-        mQuestionTextView = (TextView) findViewById(R.id.question_text_view);
+        ButterKnife.bind(this);
         updateQuestion();
 
-        mTrueButton = (Button) findViewById(R.id.true_button);
-        mTrueButton.setOnClickListener(v -> Toast.makeText(QuizActivity.this, R.string.correct_toast, Toast.LENGTH_SHORT).show());
-        mFalseButton = (Button) findViewById(R.id.false_button);
-        mFalseButton.setOnClickListener(v -> Toast.makeText(QuizActivity.this, R.string.incorrect_toast, Toast.LENGTH_SHORT).show());
-
-        mNextButton = (Button) findViewById(R.id.next_button);
-        mNextButton.setOnClickListener(v -> {
-            mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
-            updateQuestion();
-        });
     }
 
     private void updateQuestion() {
