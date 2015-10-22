@@ -31,12 +31,12 @@ public class QuizActivity extends AppCompatActivity {
 
     @OnClick(R.id.true_button)
     void trueButtonClicked() {
-        Toast.makeText(QuizActivity.this, R.string.correct_toast, Toast.LENGTH_SHORT).show();
+        checkAnswer(true);
     }
 
     @OnClick(R.id.false_button)
     void falseButtonClicked() {
-        Toast.makeText(QuizActivity.this, R.string.incorrect_toast, Toast.LENGTH_SHORT).show();
+        checkAnswer(false);
     }
 
     @OnClick(R.id.next_button)
@@ -57,6 +57,22 @@ public class QuizActivity extends AppCompatActivity {
     private void updateQuestion() {
         int question = mQuestionBank[mCurrentIndex].getTextResId();
         mQuestionTextView.setText(question);
+    }
+
+    private void checkAnswer(boolean userPressedTrue) {
+        boolean answerIsTrue = mQuestionBank[mCurrentIndex].isAnswerTrue();
+
+        int messageResId = 0;
+
+        if(userPressedTrue == answerIsTrue) {
+            messageResId = R.string.correct_toast;
+        } else {
+            messageResId = R.string.incorrect_toast;
+        }
+        Toast.makeText(this, messageResId, Toast.LENGTH_SHORT).show();
+
+        mCurrentIndex = (mCurrentIndex + 1) % mQuestionBank.length;
+        updateQuestion();
     }
 
     @Override

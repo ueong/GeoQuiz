@@ -55,9 +55,12 @@ public class QuizActivityTest {
     @Test
     public void testTrueButtonBehavior() {
         Button trueButton = ButterKnife.findById(activity, R.id.true_button);
-        trueButton.performClick();
-        ShadowLooper.idleMainLooper();
-        assertEquals(activity.getString(R.string.correct_toast), ShadowToast.getTextOfLatestToast());
+        boolean[] answers = {true, false, false, true, true};
+        for(boolean answer : answers) {
+            trueButton.performClick();
+            ShadowLooper.idleMainLooper();
+            assertEquals(activity.getString((answer == true) ? R.string.correct_toast : R.string.incorrect_toast), ShadowToast.getTextOfLatestToast());
+        }
     }
 
     @Test
@@ -71,9 +74,12 @@ public class QuizActivityTest {
     @Test
     public void testFalseButtonBehavior() {
         Button falseButton = ButterKnife.findById(activity, R.id.false_button);
-        falseButton.performClick();
-        ShadowLooper.idleMainLooper();
-        assertEquals(activity.getString(R.string.incorrect_toast), ShadowToast.getTextOfLatestToast());
+        boolean[] answers = {true, false, false, true, true};
+        for(boolean answer : answers) {
+            falseButton.performClick();
+            ShadowLooper.idleMainLooper();
+            assertEquals(activity.getString((answer == false) ? R.string.correct_toast : R.string.incorrect_toast), ShadowToast.getTextOfLatestToast());
+        }
     }
 
     @Test
