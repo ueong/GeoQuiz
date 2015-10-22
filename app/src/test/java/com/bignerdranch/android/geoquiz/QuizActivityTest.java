@@ -13,6 +13,8 @@ import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowLooper;
 import org.robolectric.shadows.ShadowToast;
 
+import butterknife.ButterKnife;
+
 import static org.assertj.android.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
@@ -37,14 +39,14 @@ public class QuizActivityTest {
     // The test simply checks that our TextView exists and has the text "Hello world!"
     @Test
     public void validateQuestionTextViewContent() {
-        TextView tvQuestionText = (TextView) activity.findViewById(R.id.question_text_view);
+        TextView tvQuestionText = ButterKnife.findById(activity, R.id.question_text_view);
         assertThat(tvQuestionText).isNotNull();
-
+        assertThat(tvQuestionText).containsText(R.string.question_oceans);
     }
 
     @Test
     public void validateTrueButtonContent() {
-        Button trueButton = (Button) activity.findViewById(R.id.true_button);
+        Button trueButton = ButterKnife.findById(activity, R.id.true_button);
         assertThat(trueButton)
                 .isNotNull()
                 .containsText(R.string.true_button);
@@ -52,7 +54,7 @@ public class QuizActivityTest {
 
     @Test
     public void testTrueButtonBehavior() {
-        Button trueButton = (Button) activity.findViewById(R.id.true_button);
+        Button trueButton = ButterKnife.findById(activity, R.id.true_button);
         trueButton.performClick();
         ShadowLooper.idleMainLooper();
         assertEquals(activity.getString(R.string.correct_toast), ShadowToast.getTextOfLatestToast());
@@ -60,7 +62,7 @@ public class QuizActivityTest {
 
     @Test
     public void validateFalseButtonContent() {
-        Button falseButton = (Button) activity.findViewById(R.id.false_button);
+        Button falseButton = ButterKnife.findById(activity, R.id.false_button);
         assertThat(falseButton)
                 .isNotNull()
                 .containsText(R.string.false_button);
@@ -68,7 +70,7 @@ public class QuizActivityTest {
 
     @Test
     public void testFalseButtonBehavior() {
-        Button falseButton = (Button) activity.findViewById(R.id.false_button);
+        Button falseButton = ButterKnife.findById(activity, R.id.false_button);
         falseButton.performClick();
         ShadowLooper.idleMainLooper();
         assertEquals(activity.getString(R.string.incorrect_toast), ShadowToast.getTextOfLatestToast());
@@ -76,9 +78,27 @@ public class QuizActivityTest {
 
     @Test
     public void validateNextButtonContent() {
-        Button nextButton = (Button) activity.findViewById(R.id.next_button);
+        Button nextButton = ButterKnife.findById(activity, R.id.next_button);
         assertThat(nextButton)
                 .isNotNull()
                 .containsText(R.string.next_button);
+    }
+
+    @Test
+    public void testNextButtonBehavior() {
+        Button nextButton = ButterKnife.findById(activity, R.id.next_button);
+        TextView tvQuestionText = ButterKnife.findById(activity, R.id.question_text_view);
+
+        assertThat(tvQuestionText).containsText(R.string.question_oceans);
+        nextButton.performClick();
+        assertThat(tvQuestionText).containsText(R.string.question_mideast);
+        nextButton.performClick();
+        assertThat(tvQuestionText).containsText(R.string.question_africa);
+        nextButton.performClick();
+        assertThat(tvQuestionText).containsText(R.string.question_americas);
+        nextButton.performClick();
+        assertThat(tvQuestionText).containsText(R.string.question_asia);
+        nextButton.performClick();
+        assertThat(tvQuestionText).containsText(R.string.question_oceans);
     }
 }
